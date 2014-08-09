@@ -1,0 +1,42 @@
+#!/bin/sh
+#
+# NAME
+#        adb-screencap -- capture an android device's screen and pull the picture using adb
+#
+# SYNOPSIS
+#        adb-screencap [-s <specific device>]
+#
+# DESCRIPTION
+#
+#        The following options are available:
+#
+#        -s <specific device>   directs command to the device or emulator with the given
+#                                   serial number or qualifier. Overrides ANDROID_SERIAL
+#
+
+SERIAL=
+DATE=`\date '+%y%m%d%H%M%S'`
+
+# 引数のオプションを取得して OPTION に入れてループ
+while getopts s: OPTION # s: で -s <arg> を受ける
+do
+    case $OPTION in
+        s) # -s があったら
+            SERIAL=$OPTARG # -s <arg> の <arg> を $OPTARG で取得できる
+            ;; # break;
+    esac
+done
+
+if [ -z "$SERIAL" ] # $SERIAL が空文字だったら
+then
+    \adb shell screencap -p /sdcard/screen-${DATE}.png
+    \adb pull /sdcard/screen-${DATE}.png
+    \adb shell rm /sdcard/screen-${DATE}.png
+else
+    # TODO: このオプションをインラインに判定してコマンドを統合したい
+    \adb -s $SERIAL shell screencap -p /sdcard/screen-${DATE}.png
+    \adb -s $SERIAL pull /sdcard/screen-${DATE}.png
+    \adb -s $SERIAL shell rm /sdcard/screen-${DATE}.png
+fi
+
+\echo screen-${DATE}.png
