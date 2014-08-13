@@ -16,7 +16,7 @@ ADB
 
 ## Install
     git clone git@github.com:wada811/ADB-Tools.git
-    ln -s ADB-Tools ~/bin
+    ln ADB-Tools/adb-screencap ~/bin
 
 ## Contribution
 1. Fork it ( http://github.com/wada811/ADB-Tools/fork )
