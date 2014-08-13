@@ -15,6 +15,7 @@ ADB
 ## Usage
 ### adb-screencap
     adb-screencap (-s SERIAL)
+### adb-screenrecord
     adb-screenrecord (-s SERIAL)
 
 ## Install
