@@ -1,0 +1,42 @@
+#!/bin/sh -eu
+#
+# NAME
+#        adb-screenrecord -- record an android device's screen and pull the video
+#
+# SYNOPSIS
+#        adb-screenrecord [-s <specific device>]
+#
+# DESCRIPTION
+#
+#        The following options are available:
+#
+#        -s <specific device>   directs command to the device or emulator with the given
+#                               serial number or qualifier. Overrides ANDROID_SERIAL
+#
+
+SERIAL=
+DATE=`\date '+%y%m%d%H%M%S'`
+
+# 引数のオプションを取得して OPTION に入れてループ
+while getopts s: OPTION # s: で -s <arg> を受ける
+do
+    case $OPTION in
+        s) # -s があったら
+            SERIAL=$OPTARG # -s <arg> の <arg> を $OPTARG で取得できる
+            ;; # break;
+    esac
+done
+
+if [ -z "$SERIAL" ] # $SERIAL が空文字だったら
+then
+    \adb shell screenrecord /sdcard/screen-${DATE}.mp4
+    \adb pull /sdcard/screen-${DATE}.mp4
+    \adb shell rm /sdcard/screen-${DATE}.mp4
+else
+    # TODO: このオプションをインラインに判定してコマンドを統合したい
+    \adb -s $SERIAL shell screenrecord /sdcard/screen-${DATE}.mp4
+    \adb -s $SERIAL pull /sdcard/screen-${DATE}.mp4
+    \adb -s $SERIAL shell rm /sdcard/screen-${DATE}.mp4
+fi
+
+\echo screen-${DATE}.mp4
