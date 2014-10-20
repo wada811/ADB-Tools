@@ -27,16 +27,9 @@ do
     esac
 done
 
-if [ -z "$SERIAL" ] # $SERIAL が空文字だったら
-then
-    \adb shell screenrecord /sdcard/screen-${DATE}.mp4
-    \adb pull /sdcard/screen-${DATE}.mp4
-    \adb shell rm /sdcard/screen-${DATE}.mp4
-else
-    # TODO: このオプションをインラインに判定してコマンドを統合したい
-    \adb -s $SERIAL shell screenrecord /sdcard/screen-${DATE}.mp4
-    \adb -s $SERIAL pull /sdcard/screen-${DATE}.mp4
-    \adb -s $SERIAL shell rm /sdcard/screen-${DATE}.mp4
-fi
+# ${PARAM:+VAR} で PARAM に非ヌル値設定されている場合のみ VAR を展開する
+\adb ${SERIAL:+-s $SERIAL} shell screenrecord /sdcard/screen-${DATE}.mp4
+\adb ${SERIAL:+-s $SERIAL} pull /sdcard/screen-${DATE}.mp4
+\adb ${SERIAL:+-s $SERIAL} shell rm /sdcard/screen-${DATE}.mp4
 
 \echo screen-${DATE}.mp4
